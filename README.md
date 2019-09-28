@@ -8,6 +8,6 @@ Evaluation: area under the ROC curve
 
 Solution: simple 2D-CNN
 
-Success: 0.942 AUC
+Success: 0.963 AUC
 
 ![](images.png)
