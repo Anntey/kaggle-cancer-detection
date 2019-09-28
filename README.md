@@ -2,7 +2,7 @@
 
 Data: 220 025 histopathologic scans of lymph node sections
 
-Task: predict a probability that an image contains tumor tissue 
+Task: predict the probability that an image contains tumor tissue 
 
 Evaluation: area under the ROC curve
 
