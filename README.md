@@ -1,4 +1,4 @@
-# Kaggle: Histopathologic Cancer Detection ([link](https://www.kaggle.com/c/histopathologic-cancer-detection/overview)
+# Kaggle: Histopathologic Cancer Detection ([link](https://www.kaggle.com/c/histopathologic-cancer-detection/overview))
 
 Data: 220 025 histopathologic scans of lymph node sections
 
