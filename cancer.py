@@ -1,4 +1,3 @@
-
 #############
 # Libraries #
 #############
@@ -11,6 +10,7 @@ import torch
 import torch.nn as nn
 from torch.nn import Conv2d, BatchNorm2d, MaxPool2d, AvgPool2d, Linear
 from torch.nn.functional import leaky_relu
+from torch.optim import Adamax
 from torchvision.transforms import Compose, ToPILImage, Pad, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, ToTensor, Normalize
 from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
@@ -68,7 +68,7 @@ class CancerDataset(Dataset):
             
         return img, label
 
-augs_train = transforms.Compose([
+augs_train = Compose([
         ToPILImage(),
         Pad(64, padding_mode = "reflect"),
         RandomHorizontalFlip(),
@@ -78,7 +78,7 @@ augs_train = transforms.Compose([
         Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
 ])
 
-augs_val = transforms.Compose([
+augs_val = Compose([
         ToPILImage(),
         Pad(64, padding_mode = "reflect"),
         ToTensor(),
@@ -129,13 +129,13 @@ class SimpleCNN(nn.Module):
 model = SimpleCNN().cuda()
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adamax(model.parameters(), lr = 2e-3)
+optimizer = Adamax(model.parameters(), lr = 2e-3)
 
 #############
 # Fit model #
 #############
 
-num_epochs = 6 
+num_epochs = 7 
 
 for epoch_i in range(num_epochs):
     model.train() # set train mode
@@ -180,9 +180,11 @@ with torch.no_grad():
         images = images.cuda()
         labels = labels.cuda()
         output = model(images)
-        preds_batch = output[:,1].cpu().numpy() # copy to host memory, convert to numpy
+        preds_batch = output[:, 1].cpu().numpy() # copy to host memory, convert to numpy
         preds.extend(preds_batch)
         
 test_df["label"] = preds
 
 test_df.to_csv("submission.csv", index = False)
+
+model.val()
