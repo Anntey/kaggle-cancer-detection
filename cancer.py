@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import torch 
-import torch.nn as nn
-import torch.nn.functional as F
+from torch.nn import Conv2d, BatchNorm2d, MaxPool2d, AvgPool2d, Linear
+from torch.nn.functional import leaky_relu
 from torchvision.transforms import Compose, ToPILImage, Pad, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, ToTensor, Normalize
 from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
@@ -100,26 +100,26 @@ class SimpleCNN(nn.Module):
     
     def __init__(self):
         super(SimpleCNN, self).__init__()
-        self.conv1 = nn.Conv2d(3, 32, 3, padding = 2)
-        self.conv2 = nn.Conv2d(32, 64, 3, padding = 2)
-        self.conv3 = nn.Conv2d(64, 128, 3, padding = 2)
-        self.conv4 = nn.Conv2d(128, 256, 3, padding = 2)
-        self.conv5 = nn.Conv2d(256, 512, 3, padding = 2)
-        self.bn1 = nn.BatchNorm2d(32)
-        self.bn2 = nn.BatchNorm2d(64)
-        self.bn3 = nn.BatchNorm2d(128)
-        self.bn4 = nn.BatchNorm2d(256)
-        self.bn5 = nn.BatchNorm2d(512)
-        self.pool = nn.MaxPool2d(2, stride = 2)
-        self.avg = nn.AvgPool2d(8)
-        self.fc = nn.Linear(512*1*1, 2)
+        self.conv1 = Conv2d(3, 32, 3, padding = 2)
+        self.conv2 = Conv2d(32, 64, 3, padding = 2)
+        self.conv3 = Conv2d(64, 128, 3, padding = 2)
+        self.conv4 = Conv2d(128, 256, 3, padding = 2)
+        self.conv5 = Conv2d(256, 512, 3, padding = 2)
+        self.bn1 = BatchNorm2d(32)
+        self.bn2 = BatchNorm2d(64)
+        self.bn3 = BatchNorm2d(128)
+        self.bn4 = BatchNorm2d(256)
+        self.bn5 = BatchNorm2d(512)
+        self.pool = MaxPool2d(2, stride = 2)
+        self.avg = AvgPool2d(8)
+        self.fc = Linear(512*1*1, 2)
         
     def forward(self, x):
-        x = self.pool(F.leaky_relu(self.bn1(self.conv1(x))))
-        x = self.pool(F.leaky_relu(self.bn2(self.conv2(x))))
-        x = self.pool(F.leaky_relu(self.bn3(self.conv3(x))))
-        x = self.pool(F.leaky_relu(self.bn4(self.conv4(x))))
-        x = self.pool(F.leaky_relu(self.bn5(self.conv5(x))))
+        x = self.pool(leaky_relu(self.bn1(self.conv1(x))))
+        x = self.pool(leaky_relu(self.bn2(self.conv2(x))))
+        x = self.pool(leaky_relu(self.bn3(self.conv3(x))))
+        x = self.pool(leaky_relu(self.bn4(self.conv4(x))))
+        x = self.pool(leaky_relu(self.bn5(self.conv5(x))))
         x = self.avg(x)
         x = x.view(-1, 512*1*1) # flatten
         x = self.fc(x)
