@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import torch 
 import torch.nn as nn
 import torch.nn.functional as F
-import torchvision.transforms as transforms
+from torchvision.transforms import Compose, ToPILImage, Pad, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, ToTensor, Normalize
 from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
 
@@ -67,20 +67,20 @@ class CancerDataset(Dataset):
         return img, label
 
 augs_train = transforms.Compose([
-        transforms.ToPILImage(),
-        transforms.Pad(64, padding_mode = "reflect"),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.RandomRotation(20),
-        transforms.ToTensor(),
-        transforms.Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
+        ToPILImage(),
+        Pad(64, padding_mode = "reflect"),
+        RandomHorizontalFlip(),
+        RandomVerticalFlip(),
+        RandomRotation(20),
+        ToTensor(),
+        Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
 ])
 
 augs_val = transforms.Compose([
-        transforms.ToPILImage(),
-        transforms.Pad(64, padding_mode = "reflect"),
-        transforms.ToTensor(),
-        transforms.Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
+        ToPILImage(),
+        Pad(64, padding_mode = "reflect"),
+        ToTensor(),
+        Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
 ])
 
 dataset_train = CancerDataset(train, "./input/train/", augmentations = augs_train)
@@ -136,6 +136,7 @@ optimizer = torch.optim.Adamax(model.parameters(), lr = 2e-3)
 num_epochs = 6 
 
 for epoch_i in range(num_epochs):
+    model.train() # set train mode
     train_loss = []
     val_loss = []
     
