@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import torch 
+import torch.nn as nn
 from torch.nn import Conv2d, BatchNorm2d, MaxPool2d, AvgPool2d, Linear
 from torch.nn.functional import leaky_relu
 from torchvision.transforms import Compose, ToPILImage, Pad, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, ToTensor, Normalize
