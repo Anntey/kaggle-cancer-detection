@@ -23,6 +23,7 @@ train_df = pd.read_csv("./input/train_labels.csv")
 train, val = train_test_split(
         train_df,
         stratify = train_df["label"],
+        shuffle = True,
         test_size = 0.1
 )
 
