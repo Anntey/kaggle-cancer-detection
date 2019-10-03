@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import torch 
 import torch.nn as nn
-from torch.nn import Conv2d, BatchNorm2d, MaxPool2d, AvgPool2d, Linear
+from torch.nn import Conv2d, BatchNorm2d, MaxPool2d, AvgPool2d, Linear, CrossEntropyLoss
 from torch.nn.functional import leaky_relu
 from torch.optim import Adamax
 from torchvision.transforms import Compose, ToPILImage, Pad, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, ToTensor, Normalize
@@ -76,14 +76,14 @@ augs_train = Compose([
         RandomVerticalFlip(),
         RandomRotation(20),
         ToTensor(),
-        Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
+        Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 augs_val = Compose([
         ToPILImage(),
         Pad(64, padding_mode = "reflect"),
         ToTensor(),
-        Normalize(mean = [0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
+        Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 dataset_train = CancerDataset(train, "./input/train/", augmentations = augs_train)
@@ -129,7 +129,7 @@ class SimpleCNN(nn.Module):
 
 model = SimpleCNN().cuda()
 
-criterion = nn.CrossEntropyLoss()
+criterion = CrossEntropyLoss()
 optimizer = Adamax(model.parameters(), lr = 2e-3)
 
 #############
@@ -187,5 +187,3 @@ with torch.no_grad():
 test_df["label"] = preds
 
 test_df.to_csv("submission.csv", index = False)
-
-model.val()
