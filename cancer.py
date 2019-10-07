@@ -52,7 +52,6 @@ plt.tight_layout()
 class CancerDataset(Dataset):
     
     def __init__(self, df_data, path, augmentations = None):
-        super().__init__()
         self.df = df_data.values
         self.path = path
         self.augmentations = augmentations
