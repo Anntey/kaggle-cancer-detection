@@ -49,8 +49,7 @@ plt.tight_layout()
 # Data generator #
 ##################
 
-class CancerDataset(Dataset):
-    
+class CancerDataset(Dataset): 
     def __init__(self, df_data, path, augmentations = None):
         self.df = df_data.values
         self.path = path
@@ -97,8 +96,7 @@ val_gen = DataLoader(dataset_val, batch_size = batch_size // 2, shuffle = False)
 # Specify model #
 #################
 
-class SimpleCNN(nn.Module):
-    
+class SimpleCNN(nn.Module):    
     def __init__(self):
         super(SimpleCNN, self).__init__()
         self.conv1 = Conv2d(3, 32, 3, padding = 2)
